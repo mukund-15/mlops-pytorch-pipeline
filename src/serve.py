@@ -8,6 +8,7 @@ from PIL import Image
 
 from .model import get_model
 from .dataset import get_transforms
+from contextlib import asynccontextmanager
 
 
 app = FastAPI(title="MLOps PyTorch Classifier")
@@ -71,15 +72,22 @@ def load_model() -> torch.nn.Module:
     return loaded_model
 
 
-@app.on_event("startup")
-def startup_event() -> None:
-    """Load model when the application starts."""
+@asynccontextmanager
+async def lifespan(app: FastAPI):
     try:
         load_model()
     except Exception as exc:
         raise RuntimeError(
             f"Failed to load model from {CHECKPOINT_PATH}: {exc}"
         ) from exc
+
+    yield
+
+
+app = FastAPI(
+    title="MLOps PyTorch Classifier",
+    lifespan=lifespan,
+)
 
 
 @app.get("/health")
