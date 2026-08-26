@@ -66,3 +66,11 @@ def test_cifar10_transforms_produce_expected_shape():
     tensor = transform(image)
 
     assert tensor.shape == (3, 32, 32)
+
+
+def test_cifar10_class_names():
+    from src.serve import CLASS_NAMES
+
+    assert len(CLASS_NAMES) == 10
+    assert CLASS_NAMES[0] == "airplane"
+    assert CLASS_NAMES[-1] == "truck"

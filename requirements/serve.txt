@@ -2,5 +2,7 @@
 
 torch==2.13.0+cpu
 torchvision==0.28.0+cpu
-PyYAML==6.0.3
-pytest==9.1.1
+fastapi==0.116.1
+uvicorn[standard]==0.35.0
+Pillow==12.3.0
+python-multipart==0.0.20
