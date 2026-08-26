@@ -9,6 +9,9 @@ import yaml
 
 from dataset import get_dataloaders
 from model import get_model
+import os
+import json
+import random
 
 
 def load_config(config_path: str) -> dict[str, Any]:
@@ -133,6 +136,15 @@ def main() -> None:
         config_path = Path("configs/training_config.yaml")
 
     config = load_config(str(config_path))
+    config["data"]["data_dir"] = os.getenv(
+    "MLOPS_DATA_DIR",
+    config["data"]["data_dir"],
+)
+
+    config["output"]["checkpoint_dir"] = os.getenv(
+    "MLOPS_CHECKPOINT_DIR",
+    config["output"]["checkpoint_dir"],
+)
 
     seed = int(config["training"].get("seed", 42))
     set_seed(seed)
@@ -158,12 +170,10 @@ def main() -> None:
     )
 
     criterion = nn.CrossEntropyLoss()
-
     checkpoint_dir = Path(config["output"]["checkpoint_dir"])
+    checkpoint_path = checkpoint_dir / config["output"]["model_name"]
 
-    # Local development fallback.
-    if str(checkpoint_dir).startswith("/app/") and not Path("/app").exists():
-        checkpoint_dir = Path("checkpoints")
+    
 
     checkpoint_path = checkpoint_dir / config["output"]["model_name"]
 
