@@ -38,6 +38,7 @@ flowchart TD
     I --> J[GET /health]
     I --> K[POST /predict]
 
+```
 ## 3. Repository Structure
    CIFAR-10
       |
